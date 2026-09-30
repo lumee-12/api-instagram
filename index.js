@@ -10,7 +10,7 @@ app.get('/perfil', async (req, res) => {
   if (!usuario) return res.status(400).json({ error: 'Usuário não informado' });
 
   try {
-    const response = await axios.get('https://instagram-looter2.p.rapidapi.com/user/info', {
+    const response = await axios.get('https://instagram-looter2.p.rapidapi.com/profile', {
       params: { username: usuario },
       headers: {
         'x-rapidapi-key': '256947ffd3msh213f04ed6e5df42p153a86jsnb54889e031ac',
@@ -29,10 +29,10 @@ app.get('/perfil', async (req, res) => {
     });
 
   } catch (error) {
-    console.log('ERRO RAPIDAPI:', error.response ? error.response.data : error.message);
+    console.log('ERRO DETALHADO:', error.response ? error.response.data : error.message);
     res.status(500).json({ 
       error: 'Erro ao buscar perfil no Instagram',
-      detalhe: error.response ? error.response.data : error.message 
+      detalhes: error.response ? error.response.data : error.message 
     });
   }
 });
