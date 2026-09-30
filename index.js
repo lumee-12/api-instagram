@@ -20,12 +20,33 @@ app.get('/perfil', async (req, res) => {
 
     const data = response.data;
 
+    // Trata foto e bio (sempre públicas no Instagram)
+    const foto = data.profile_pic_url_hd || data.profile_pic_url || data.pic || '';
+    const bio = data.biography || data.bio || '';
+    const isPrivate = data.is_private || false;
+
+    // Mapeamento de métricas
+    const rawSeguidores = data.edge_followed_by?.count || data.follower_count || data.followers || data.followers_count || 0;
+    const rawPosts = data.edge_owner_to_timeline_media?.count || data.media_count || data.posts || 0;
+    const rawSeguindo = data.edge_follow?.count || data.following_count || data.following || 0;
+
+    // Formatação de seguidores
+    let seguidoresFormatado = rawSeguidores;
+    if (typeof rawSeguidores === 'number' && rawSeguidores > 0) {
+      if (rawSeguidores >= 1000000) {
+        seguidoresFormatado = (rawSeguidores / 1000000).toFixed(1) + ' mi';
+      } else if (rawSeguidores >= 1000) {
+        seguidoresFormatado = (rawSeguidores / 1000).toFixed(1) + ' k';
+      }
+    }
+
     res.json({
-      foto: data.profile_pic_url_hd || data.profile_pic_url || data.pic || '',
-      posts: data.media_count !== undefined ? data.media_count : (data.posts || 0),
-      seguidores: data.follower_count || data.followers || '0',
-      seguindo: data.following_count || data.following || 0,
-      bio: data.biography || data.bio || ''
+      privado: isPrivate,
+      foto: foto,
+      posts: rawPosts,
+      seguidores: seguidoresFormatado,
+      seguindo: rawSeguindo,
+      bio: bio
     });
 
   } catch (error) {
