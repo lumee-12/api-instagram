@@ -10,7 +10,7 @@ app.get('/perfil', async (req, res) => {
   if (!usuario) return res.status(400).json({ error: 'Usuário não informado' });
 
   try {
-    const response = await axios.get(https://instagram-looter2.p.rapidapi.com/user/info, {
+    const response = await axios.get('https://instagram-looter2.p.rapidapi.com/user/info', {
       params: { username: usuario },
       headers: {
         'x-rapidapi-key': '256947ffd3msh213f04ed6e5df42p153a86jsnb54889e031ac',
