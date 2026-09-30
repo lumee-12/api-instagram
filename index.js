@@ -21,15 +21,19 @@ app.get('/perfil', async (req, res) => {
     const data = response.data;
 
     res.json({
-      foto: data.profile_pic_url_hd || data.profile_pic_url || '',
-      posts: data.media_count !== undefined ? data.media_count : 0,
-      seguidores: data.follower_count ? (data.follower_count > 1000000 ? (data.follower_count / 1000000).toFixed(1) + ' mi' : data.follower_count) : '0',
-      seguindo: data.following_count !== undefined ? data.following_count : 0,
-      bio: data.biography || ''
+      foto: data.profile_pic_url_hd || data.profile_pic_url || data.pic || '',
+      posts: data.media_count !== undefined ? data.media_count : (data.posts || 0),
+      seguidores: data.follower_count || data.followers || '0',
+      seguindo: data.following_count || data.following || 0,
+      bio: data.biography || data.bio || ''
     });
 
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar perfil no Instagram' });
+    console.log('ERRO RAPIDAPI:', error.response ? error.response.data : error.message);
+    res.status(500).json({ 
+      error: 'Erro ao buscar perfil no Instagram',
+      detalhe: error.response ? error.response.data : error.message 
+    });
   }
 });
 
